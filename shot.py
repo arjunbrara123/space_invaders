@@ -5,19 +5,15 @@ class Shot(Turtle):
 
     #register_shape("alien.gif")
 
-    def __init__(self):
+    def __init__(self, xpos):
         super().__init__()
         self.shape("circle")
-        self.color("black")
+        self.color("yellow")
         self.shapesize(stretch_wid=0.3, stretch_len=1)
         self.penup()
         self.active = 1
-        self.setheading(90)
-
-    def fire_shot(self, xpos):
-        self.active = 1
-        self.color("yellow")
         self.setpos(xpos, -250)
+        self.setheading(90)
 
     def move(self):
         if self.active == 1:

@@ -16,8 +16,9 @@ alien_manager = AlienManager()          # Initialise the alien manager
 alien_manager.setup_aliens()            # Set up on-screen aliens
 time_delay = 0.008                      # Set initial ball speed
 winning_score = 3                       # Set points required to win game
-FONT_SPLASH = ("Courier", 80, "bold")   # Font for displaying 'Breakout' splash screen
+FONT_SPLASH = ("Courier", 60, "bold")   # Font for displaying 'SPACE INVADERS' splash screen
 FONT_MSG = ("Courier", 40, "bold")      # Font for displaying messages in centre screen
+win_flag = 0                            # Flag to check if won
 
 # Initialise the spaceship
 spaceship = SpaceShip((0, -250))        # SpaceShip starting position
@@ -27,7 +28,7 @@ screen.update()                         # Update screen to let users see these
 screen.listen()
 screen.onkey(spaceship.move_left, "Left")       # SpaceShip Left Key
 screen.onkey(spaceship.move_right, "Right")     # SpaceShip Right Key
-screen.onkey(spaceship.shoot, "space")           # Fire shot
+screen.onkey(spaceship.fire_shot, "space")           # Fire shot
 
 # Welcome 'Splash Screen' message
 def splash_screen(point=0):
@@ -52,22 +53,32 @@ while game_on:                      # Start continuous game loop until someone w
 
     # Continuously move aliens
     alien_manager.move()                     # Move aliens forward in set movement direction based on game rules
-    spaceship.shot.move()
+    spaceship.shoot()
 
     # Check for collision with a alien
     for alien in alien_manager.all_aliens:      # Loop through all aliens
-        if alien.distance(spaceship.shot) < 14:          # Check if shot hits a alien
-            if alien.active == 1:
-                p_score += 1                    # Add 1 to player score
-                scoreboard.refresh(p_score)     # Refresh scoreboard
-                alien.color("black")            # Set alien to be invisible
-                alien.active = 0                # Set alien to be inactive
-                alien.hideturtle()
-                screen.update()                 # Update screen
+        for shot in spaceship.all_shots:
+            if alien.distance(shot) < 14:          # Check if shot hits a alien
+                if alien.active == 1:
+                    p_score += 1                    # Add 1 to player score
+                    scoreboard.refresh(p_score)     # Refresh scoreboard
+                    alien.color("black")            # Set alien to be invisible
+                    alien.active = 0                # Set alien to be inactive
+                    alien.hideturtle()
+                    screen.update()                 # Update screen
 
     # Check if Player lost
     if alien.ycor() < -200:                     # Check if ball crossed bottom of screen
         scoreboard.game_over()                  # Show updated score on screen
+
+    # Check if player won
+    win_flag = 0
+    for alien in alien_manager.all_aliens:  # Loop through all aliens
+        if alien.active == 1:
+            win_flag = 1
+    if win_flag == 0:
+        scoreboard.winner(p_score)
+        game_on = False
 
     # Update screen
     time.sleep(time_delay)                      # Pause game to facilitate visual animation

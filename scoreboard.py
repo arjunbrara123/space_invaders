@@ -30,7 +30,7 @@ class Scoreboard(Turtle):
         """Display winning player on screen"""
         self.goto(0, 0)                                                     # Goto centre of screen
         self.color("gold")                                                  # Change text colour to gold
-        self.write(f"Your Score: {score}!", align="center", font=FONT_MSG)  # Write winning player on screen
+        self.write(f"You Win! Score: {score}!", align="center", font=FONT_MSG)  # Write winning player on screen
 
     def debug_mode(self):
         """Inform user of debugging mode is active"""
